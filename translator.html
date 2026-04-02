@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sheek Bakrii Saphaloo ↔ Latin Qubee Translator</title>
+  <link rel="stylesheet" href="sbs-font-base64.css">
+  <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=SF+Pro+Text:wght@300;400;500;600&family=Noto+Sans+Ethiopic:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #0071e3;
+      --primary-hover: #0077ed;
+      --secondary: #86868b;
+      --dark: #1d1d1f;
+      --light: #f5f5f7;
+      --white: #ffffff;
+      --gray-100: #fbfbfd;
+      --gray-200: #f5f5f7;
+      --gray-300: #e8e8ed;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+      --shadow-lg: 0 32px 64px rgba(0,0,0,0.16);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Noto Sans Ethiopic', sans-serif;
+      min-height: 100vh;
+      background: var(--white);
+      color: var(--dark);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .navbar-content {
+      max-width: 980px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+
+    .nav-logo {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--dark);
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 12px;
+      color: var(--secondary);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover {
+      color: var(--dark);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 120px 20px 60px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 60px;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: 56px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(90deg, #1d1d1f 0%, #424245 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .translator-card {
+      background: var(--gray-100);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-md);
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .font-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .font-label {
+      font-size: 13px;
+      color: var(--secondary);
+      font-weight: 500;
+    }
+
+    .font-size-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      padding: 4px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .font-btn {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 16px;
+      font-weight: 600;
+      transition: all var(--transition);
+    }
+
+    .font-btn:hover {
+      background: var(--gray-200);
+    }
+
+    .font-btn:active {
+      transform: scale(0.95);
+    }
+
+    .font-value {
+      font-size: 13px;
+      color: var(--dark);
+      min-width: 36px;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .textarea-wrapper {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: all var(--transition);
+    }
+
+    .textarea-wrapper:focus-within {
+      box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.3);
+    }
+
+    textarea {
+      width: 100%;
+      height: 140px;
+      font-size: var(--font-size, 18px);
+      font-family: 'SheekBakriSaphaloo', 'Noto Sans Ethiopic', 'Noto Sans', sans-serif;
+      padding: 16px 20px;
+      border: 1px solid var(--gray-300);
+      border-radius: var(--radius-md);
+      background: var(--white);
+      color: var(--dark);
+      resize: vertical;
+      transition: all var(--transition);
+      line-height: 1.6;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    textarea::placeholder {
+      color: #a1a1a6;
+    }
+
+    #dst {
+      background: var(--gray-200);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 24px 0;
+    }
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    #goBtn {
+      background: var(--primary);
+      color: white;
+    }
+
+    #goBtn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+    }
+
+    #valBtn {
+      background: var(--dark);
+      color: white;
+    }
+
+    #valBtn:hover {
+      background: #2d2d2f;
+      transform: translateY(-1px);
+    }
+
+    #clearBtn {
+      background: var(--gray-300);
+      color: var(--dark);
+    }
+
+    #clearBtn:hover {
+      background: #d1d1d6;
+    }
+
+    #saveBtn {
+      background: linear-gradient(135deg, #34c759 0%, #30b350 100%);
+      color: white;
+    }
+
+    #saveBtn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(52, 199, 89, 0.4);
+    }
+
+    .info-box {
+      margin-top: 20px;
+      padding: 16px;
+      background: var(--white);
+      border-radius: var(--radius-md);
+      min-height: 60px;
+      font-size: 14px;
+      color: var(--secondary);
+    }
+
+    .info-box:empty::before {
+      content: 'Validation results will appear here';
+      color: #a1a1a6;
+      font-style: italic;
+    }
+
+    .valid {
+      background: #e8f5e9;
+      color: #2e7d32;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .invalid {
+      background: #ffebee;
+      color: #c62828;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    .code {
+      font-family: 'SF Mono', monospace;
+      background: var(--gray-200);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .info-line {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--gray-300);
+    }
+
+    .info-line:last-child {
+      border-bottom: none;
+    }
+
+    .status-bar {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .status-bar.error {
+      background: #ffe5e5;
+      color: #c62828;
+    }
+
+    .status-bar.ok {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gray-300), transparent);
+      margin: 24px 0;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--secondary);
+      font-size: 12px;
+    }
+
+    .footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+    .export-preview {
+      display: none;
+      background: var(--white);
+      padding: 40px;
+      border-radius: var(--radius-lg);
+    }
+
+    .export-preview.active {
+      display: block;
+    }
+
+    .export-content {
+      font-size: var(--font-size, 18px);
+      font-family: 'SheekBakriSaphaloo', 'Noto Sans Ethiopic', 'Noto Sans', sans-serif;
+      line-height: 1.8;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 36px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+      }
+
+      .container {
+        padding: 100px 16px 40px;
+      }
+
+      .translator-card {
+        padding: 20px;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .font-controls {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-content">
+      <div class="nav-logo">Sheek Bakrii</div>
+      <ul class="nav-links">
+        <li><a href="#">Translator</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Download</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <header class="hero">
+      <h1>Sheek Bakrii Saphaloo</h1>
+      <p class="subtitle">Transliterate seamlessly between Latin Qubee and Sheek Bakrii script</p>
+    </header>
+
+    <div class="translator-card" id="translatorCard">
+      <div class="toolbar">
+        <div class="font-controls">
+          <span class="font-label">Font Size</span>
+          <div class="font-size-control">
+            <button class="font-btn" onclick="adjustFontSize(-2)">−</button>
+            <span class="font-value" id="fontValue">18px</span>
+            <button class="font-btn" onclick="adjustFontSize(2)">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="src">Source</label>
+        <div class="textarea-wrapper">
+          <textarea id="src" placeholder="Type Latin Qubee (e.g., maqaanaan) or paste SBS glyphs here..."></textarea>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button id="goBtn">Transliterate</button>
+        <button id="valBtn">Validate</button>
+        <button id="clearBtn">Clear</button>
+        <button id="saveBtn">Save as PNG</button>
+      </div>
+
+      <div class="input-group">
+        <label for="dst">Result</label>
+        <div class="textarea-wrapper">
+          <textarea id="dst" readonly placeholder="Result will appear here..."></textarea>
+        </div>
+      </div>
+
+      <div id="infoBox"></div>
+      <div id="statusBar" class="status-bar"></div>
+    </div>
+
+    <div class="export-preview" id="exportPreview">
+      <div class="export-content" id="exportContent"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>Works entirely offline &middot; <a href="#">Privacy</a></p>
+  </footer>
+
+  <script src="translator.js"></script>
+  <script>
+    let currentFontSize = 18;
+    const minFontSize = 12;
+    const maxFontSize = 48;
+
+    function adjustFontSize(delta) {
+      currentFontSize = Math.max(minFontSize, Math.min(maxFontSize, currentFontSize + delta));
+      document.documentElement.style.setProperty('--font-size', currentFontSize + 'px');
+      document.getElementById('fontValue').textContent = currentFontSize + 'px';
+      localStorage.setItem('translatorFontSize', currentFontSize);
+    }
+
+    const savedFontSize = localStorage.getItem('translatorFontSize');
+    if (savedFontSize) {
+      currentFontSize = parseInt(savedFontSize);
+      document.documentElement.style.setProperty('--font-size', currentFontSize + 'px');
+      document.getElementById('fontValue').textContent = currentFontSize + 'px';
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', async function() {
+      const resultText = document.getElementById('dst').value;
+      if (!resultText) {
+        alert('No result to save. Please transliterate first.');
+        return;
+      }
+
+      const exportContent = document.getElementById('exportContent');
+      const exportPreview = document.getElementById('exportPreview');
+      
+      exportContent.textContent = resultText;
+      exportPreview.classList.add('active');
+
+      const card = document.getElementById('translatorCard');
+      const saveBtn = document.getElementById('saveBtn');
+      const buttonGroup = card.querySelector('.button-group');
+      const fontControls = card.querySelector('.toolbar');
+
+      buttonGroup.style.display = 'none';
+      fontControls.style.display = 'none';
+
+      try {
+        const canvas = await html2canvas(card, {
+          backgroundColor: '#fbfbfd',
+          scale: 2,
+          useCORS: true,
+          logging: false
+        });
+
+        const link = document.createElement('a');
+        link.download = 'sheek-bakrii-translation.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      } catch (err) {
+        console.error('Error saving:', err);
+        alert('Error saving image. Please try again.');
+      }
+
+      buttonGroup.style.display = 'flex';
+      fontControls.style.display = 'flex';
+      exportPreview.classList.remove('active');
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        document.getElementById('goBtn').click();
+      }
+    });
+  </script>
+</body>
+</html>
