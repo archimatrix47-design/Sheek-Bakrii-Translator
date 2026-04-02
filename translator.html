@@ -424,23 +424,55 @@
       text-decoration: underline;
     }
 
-    .export-preview {
-      display: none;
-      background: var(--white);
+    .export-container {
+      position: fixed;
+      visibility: hidden;
+      left: 0;
+      top: 0;
+      width: 600px;
       padding: 40px;
-      border-radius: var(--radius-lg);
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     }
 
-    .export-preview.active {
-      display: block;
+    .export-header {
+      font-size: 14px;
+      color: var(--secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+      font-weight: 600;
     }
 
-    .export-content {
-      font-size: var(--font-size, 18px);
+    .export-label {
+      font-size: 13px;
+      color: var(--secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+
+    .export-text {
+      font-size: var(--font-size, 24px);
       font-family: 'SheekBakriSaphaloo', 'Noto Sans Ethiopic', 'Noto Sans', sans-serif;
       line-height: 1.8;
       word-wrap: break-word;
       white-space: pre-wrap;
+      padding: 20px;
+      background: var(--gray-100);
+      border-radius: 12px;
+      border: 1px solid var(--gray-300);
+      min-height: 80px;
+      color: var(--dark);
+    }
+
+    .export-footer {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--gray-300);
+      font-size: 12px;
+      color: var(--secondary);
     }
 
     @media (max-width: 768px) {
@@ -535,8 +567,11 @@
       <div id="statusBar" class="status-bar"></div>
     </div>
 
-    <div class="export-preview" id="exportPreview">
-      <div class="export-content" id="exportContent"></div>
+    <div class="export-container" id="exportContainer">
+      <div class="export-header">Sheek Bakrii Saphaloo</div>
+      <div class="export-label">Translation Result</div>
+      <div class="export-text" id="exportText"></div>
+      <div class="export-footer">Transliterated with Sheek Bakrii Translator</div>
     </div>
   </div>
 
@@ -571,26 +606,35 @@
         return;
       }
 
-      const exportContent = document.getElementById('exportContent');
-      const exportPreview = document.getElementById('exportPreview');
+      const exportContainer = document.getElementById('exportContainer');
+      const exportText = document.getElementById('exportText');
       
-      exportContent.textContent = resultText;
-      exportPreview.classList.add('active');
+      exportText.style.fontSize = currentFontSize + 'px';
+      exportText.textContent = resultText;
+      exportContainer.style.visibility = 'visible';
 
-      const card = document.getElementById('translatorCard');
-      const saveBtn = document.getElementById('saveBtn');
-      const buttonGroup = card.querySelector('.button-group');
-      const fontControls = card.querySelector('.toolbar');
-
+      const buttonGroup = document.querySelector('.button-group');
+      const fontControls = document.querySelector('.toolbar');
       buttonGroup.style.display = 'none';
       fontControls.style.display = 'none';
 
+      await new Promise(resolve => setTimeout(resolve, 200));
+
       try {
-        const canvas = await html2canvas(card, {
-          backgroundColor: '#fbfbfd',
-          scale: 2,
+        const canvas = await html2canvas(exportContainer, {
+          backgroundColor: '#ffffff',
+          scale: 3,
           useCORS: true,
-          logging: false
+          logging: false,
+          onclone: function(clonedDoc) {
+            const clonedContainer = clonedDoc.getElementById('exportContainer');
+            if (clonedContainer) {
+              clonedContainer.style.visibility = 'visible';
+              clonedContainer.style.position = 'relative';
+              clonedContainer.style.left = '0';
+              clonedContainer.style.top = '0';
+            }
+          }
         });
 
         const link = document.createElement('a');
@@ -602,9 +646,9 @@
         alert('Error saving image. Please try again.');
       }
 
+      exportContainer.style.visibility = 'hidden';
       buttonGroup.style.display = 'flex';
       fontControls.style.display = 'flex';
-      exportPreview.classList.remove('active');
     });
 
     document.addEventListener('keydown', function(e) {
