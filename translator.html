@@ -6,7 +6,6 @@
   <title>Sheek Bakrii Saphaloo ↔ Latin Qubee Translator</title>
   <link rel="stylesheet" href="sbs-font-base64.css">
   <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&family=SF+Pro+Text:wght@300;400;500;600&family=Noto+Sans+Ethiopic:wght@400;500;600&display=swap" rel="stylesheet">
-  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <style>
     *, *::before, *::after {
       box-sizing: border-box;
@@ -424,56 +423,7 @@
       text-decoration: underline;
     }
 
-    .export-container {
-      position: fixed;
-      visibility: hidden;
-      left: 0;
-      top: 0;
-      width: 600px;
-      padding: 40px;
-      background: var(--white);
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-    }
 
-    .export-header {
-      font-size: 14px;
-      color: var(--secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 12px;
-      font-weight: 600;
-    }
-
-    .export-label {
-      font-size: 13px;
-      color: var(--secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 8px;
-    }
-
-    .export-text {
-      font-size: var(--font-size, 24px);
-      font-family: 'SheekBakriSaphaloo', 'Noto Sans Ethiopic', 'Noto Sans', sans-serif;
-      line-height: 1.8;
-      word-wrap: break-word;
-      white-space: pre-wrap;
-      padding: 20px;
-      background: var(--gray-100);
-      border-radius: 12px;
-      border: 1px solid var(--gray-300);
-      min-height: 80px;
-      color: var(--dark);
-    }
-
-    .export-footer {
-      margin-top: 24px;
-      padding-top: 16px;
-      border-top: 1px solid var(--gray-300);
-      font-size: 12px;
-      color: var(--secondary);
-    }
 
     @media (max-width: 768px) {
       h1 {
@@ -567,12 +517,7 @@
       <div id="statusBar" class="status-bar"></div>
     </div>
 
-    <div class="export-container" id="exportContainer">
-      <div class="export-header">Sheek Bakrii Saphaloo</div>
-      <div class="export-label">Translation Result</div>
-      <div class="export-text" id="exportText"></div>
-      <div class="export-footer">Transliterated with Sheek Bakrii Translator</div>
-    </div>
+
   </div>
 
   <footer class="footer">
@@ -599,56 +544,73 @@
       document.getElementById('fontValue').textContent = currentFontSize + 'px';
     }
 
-    document.getElementById('saveBtn').addEventListener('click', async function() {
+    document.getElementById('saveBtn').addEventListener('click', function() {
       const resultText = document.getElementById('dst').value;
       if (!resultText) {
         alert('No result to save. Please transliterate first.');
         return;
       }
 
-      const exportContainer = document.getElementById('exportContainer');
-      const exportText = document.getElementById('exportText');
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
       
-      exportText.style.fontSize = currentFontSize + 'px';
-      exportText.textContent = resultText;
-      exportContainer.style.visibility = 'visible';
-
-      const buttonGroup = document.querySelector('.button-group');
-      const fontControls = document.querySelector('.toolbar');
-      buttonGroup.style.display = 'none';
-      fontControls.style.display = 'none';
-
-      await new Promise(resolve => setTimeout(resolve, 200));
-
-      try {
-        const canvas = await html2canvas(exportContainer, {
-          backgroundColor: '#ffffff',
-          scale: 3,
-          useCORS: true,
-          logging: false,
-          onclone: function(clonedDoc) {
-            const clonedContainer = clonedDoc.getElementById('exportContainer');
-            if (clonedContainer) {
-              clonedContainer.style.visibility = 'visible';
-              clonedContainer.style.position = 'relative';
-              clonedContainer.style.left = '0';
-              clonedContainer.style.top = '0';
-            }
-          }
-        });
-
-        const link = document.createElement('a');
-        link.download = 'sheek-bakrii-translation.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      } catch (err) {
-        console.error('Error saving:', err);
-        alert('Error saving image. Please try again.');
+      const fontSize = currentFontSize;
+      const padding = 40;
+      const lineHeight = fontSize * 1.6;
+      
+      ctx.font = `${fontSize}px "SheekBakriSaphaloo", "Noto Sans Ethiopic", sans-serif`;
+      
+      const maxWidth = 700;
+      const words = resultText.split(' ');
+      const lines = [];
+      let currentLine = '';
+      
+      for (let word of words) {
+        const testLine = currentLine ? currentLine + ' ' + word : word;
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && currentLine) {
+          lines.push(currentLine);
+          currentLine = word;
+        } else {
+          currentLine = testLine;
+        }
       }
-
-      exportContainer.style.visibility = 'hidden';
-      buttonGroup.style.display = 'flex';
-      fontControls.style.display = 'flex';
+      if (currentLine) lines.push(currentLine);
+      
+      const width = 800;
+      const height = padding * 2 + lines.length * lineHeight + 120;
+      
+      canvas.width = width;
+      canvas.height = height;
+      
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, width, height);
+      
+      ctx.fillStyle = '#1d1d1f';
+      ctx.font = '600 14px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText('Sheek Bakrii Saphaloo', padding, padding);
+      
+      ctx.fillStyle = '#86868b';
+      ctx.font = '500 12px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText('TRANSLATION RESULT', padding, padding + 30);
+      
+      ctx.fillStyle = '#1d1d1f';
+      ctx.font = `${fontSize}px "SheekBakriSaphaloo", "Noto Sans Ethiopic", sans-serif`;
+      
+      let y = padding + 80;
+      for (let line of lines) {
+        ctx.fillText(line, padding, y);
+        y += lineHeight;
+      }
+      
+      ctx.fillStyle = '#86868b';
+      ctx.font = '400 12px -apple-system, BlinkMacSystemFont, sans-serif';
+      ctx.fillText('Transliterated with Sheek Bakrii Translator', padding, height - padding);
+      
+      const link = document.createElement('a');
+      link.download = 'sheek-bakrii-translation.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
     });
 
     document.addEventListener('keydown', function(e) {
