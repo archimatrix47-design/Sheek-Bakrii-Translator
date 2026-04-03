@@ -14,32 +14,62 @@
     }
 
     :root {
-      --primary: #0071e3;
-      --primary-hover: #0077ed;
-      --secondary: #86868b;
-      --dark: #1d1d1f;
-      --light: #f5f5f7;
-      --white: #ffffff;
-      --gray-100: #fbfbfd;
-      --gray-200: #f5f5f7;
-      --gray-300: #e8e8ed;
-      --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
-      --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
-      --shadow-lg: 0 32px 64px rgba(0,0,0,0.16);
+      --primary: #4a90d9;
+      --primary-hover: #5a9fe0;
+      --secondary: #9a9aa3;
+      --dark: #3d3d3f;
+      --light: #e8e8eb;
+      --white: #fafafa;
+      --gray-100: #f0f0f2;
+      --gray-200: #e5e5e8;
+      --gray-300: #d5d5d8;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+      --shadow-lg: 0 32px 64px rgba(0,0,0,0.10);
       --radius-sm: 8px;
       --radius-md: 12px;
       --radius-lg: 20px;
       --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    .map-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.2;
+      pointer-events: none;
+    }
+    
+    .map-bg svg {
+      width: 100%;
+      height: auto;
+      filter: grayscale(100%) contrast(0.8);
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Noto Sans Ethiopic', sans-serif;
       min-height: 100vh;
-      background: var(--white);
+      background: #f0f0f2;
       color: var(--dark);
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(240, 240, 242, 0.92);
+      pointer-events: none;
+      z-index: -1;
     }
 
     .navbar {
@@ -72,6 +102,7 @@
       font-weight: 500;
       color: var(--dark);
       letter-spacing: -0.02em;
+      text-decoration: none;
     }
 
     .nav-links {
@@ -118,7 +149,7 @@
       font-size: 56px;
       font-weight: 700;
       letter-spacing: -0.02em;
-      background: linear-gradient(90deg, #1d1d1f 0%, #424245 100%);
+      background: linear-gradient(90deg, #5d5d5f 0%, #7a7a7d 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -317,7 +348,7 @@
     }
 
     #saveBtn {
-      background: linear-gradient(135deg, #34c759 0%, #30b350 100%);
+      background: linear-gradient(135deg, #5cb85c 0%, #4cae4c 100%);
       color: white;
     }
 
@@ -494,13 +525,12 @@
   </style>
 </head>
 <body>
+  <img class="map-bg" src="contour-lines.svg" alt="Oromia Region">
   <nav class="navbar">
     <div class="navbar-content">
-      <div class="nav-logo">Sheek Bakrii</div>
+      <a href="translator.html" class="nav-logo">Sheek Bakrii</a>
       <ul class="nav-links">
-        <li><a href="#">Translator</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Download</a></li>
+        <li><a href="about.html">About</a></li>
       </ul>
     </div>
   </nav>
@@ -680,7 +710,7 @@
         ctx.fillStyle = '#f5f5f7';
         ctx.fillRect(0, 0, boxWidth, boxHeight);
 
-        ctx.fillStyle = '#1d1d1f';
+        ctx.fillStyle = '#5d5d5f';
         ctx.font = fontSize + 'px "SheekBakriSaphaloo", "Noto Sans Ethiopic", sans-serif';
         
         let y = contentPadding + fontSize;
