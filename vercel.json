@@ -1,18 +1,5 @@
 {
-  "buildCommand": "echo 'Static site - no build required'",
+  "buildCommand": "echo no build needed",
   "outputDirectory": ".",
-  "framework": null,
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/translator.html"
-    }
-  ]
+  "framework": null
 }
