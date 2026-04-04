@@ -1,0 +1,24 @@
+{
+  "name": "primary",
+  "version": "1.0.0",
+  "description": "Sheek‑Bakrii‑Translator",
+  "main": "generate-maps.js",
+  "scripts": {
+    "test": "echo \"No tests configured\" && exit 0",
+    "serve": "python3 -m http.server 8000 || python -m SimpleHTTPServer 8000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/archimatrix47-design/Bakrii-Translator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/archimatrix47-design/Bakrii-Translator/issues"
+  },
+  "homepage": "https://github.com/archimatrix47-design/Bakrii-Translator#readme",
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
+}
